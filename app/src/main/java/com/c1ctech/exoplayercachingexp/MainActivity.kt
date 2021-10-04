@@ -23,10 +23,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var httpDataSourceFactory: HttpDataSource.Factory
     private lateinit var defaultDataSourceFactory: DefaultDataSourceFactory
     private lateinit var cacheDataSourceFactory: DataSource.Factory
-    private lateinit var simpleExoPlayer: SimpleExoPlayer
+    private var simpleExoPlayer: SimpleExoPlayer? = null
     private val simpleCache: SimpleCache = MyApp.simpleCache
 
-    private var mPlayer: SimpleExoPlayer? = null
     private lateinit var playerView: PlayerView
     private val videoURL = "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4"
 
@@ -68,19 +67,19 @@ class MainActivity : AppCompatActivity() {
         playerView.player = simpleExoPlayer
 
         //setting exoplayer when it is ready.
-        simpleExoPlayer.playWhenReady = true
+        simpleExoPlayer!!.playWhenReady = true
 
         //Seeks to a position specified in milliseconds in the specified window.
-        simpleExoPlayer.seekTo(0, 0)
+        simpleExoPlayer!!.seekTo(0, 0)
 
         //set repeat mode.
-        simpleExoPlayer.repeatMode = Player.REPEAT_MODE_OFF
+        simpleExoPlayer!!.repeatMode = Player.REPEAT_MODE_OFF
 
         // Set the media source to be played.
-        simpleExoPlayer.setMediaSource(mediaSource, true)
+        simpleExoPlayer!!.setMediaSource(mediaSource, true)
 
         // Prepare the player.
-        simpleExoPlayer.prepare()
+        simpleExoPlayer!!.prepare()
     }
 
 
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (Util.SDK_INT < 24 || mPlayer == null) {
+        if (Util.SDK_INT < 24 || simpleExoPlayer == null) {
             initPlayer()
         }
     }
@@ -113,11 +112,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun releasePlayer() {
-        if (mPlayer == null) {
+        if (simpleExoPlayer == null) {
             return
         }
         //release player when done
-        mPlayer!!.release()
-        mPlayer = null
+        simpleExoPlayer!!.release()
+        simpleExoPlayer = null
     }
 }
